@@ -1,33 +1,29 @@
 .. _intro-tutorial:
 
 ===============
-Scrapy Tutorial
+Scrapy 教程(中文版)
 ===============
 
-In this tutorial, we'll assume that Scrapy is already installed on your system.
-If that's not the case, see :ref:`intro-install`.
+在本教程中， 我们默认您的电脑系统上已经安装了 Scrapy 。
+如果尚未安装的话，可以参考:ref:`intro-install`。
 
-We are going to scrape `quotes.toscrape.com <http://quotes.toscrape.com/>`_, a website
-that lists quotes from famous authors.
+我们将抓取 `quotes.toscrape.com <http://quotes.toscrape.com/>`_，这个网站列举了来自很多著名作家的格言。
 
-This tutorial will walk you through these tasks:
+本教程将通过以下几个任务引导你：
 
-1. Creating a new Scrapy project
-2. Writing a :ref:`spider <topics-spiders>` to crawl a site and extract data
-3. Exporting the scraped data using the command line
-4. Changing spider to recursively follow links
-5. Using spider arguments
+1. 床架一个新的 Scrapy 工程
+2. 写一个 :ref:`spider <topics-spiders>` 去抓去网站和提取数据
+3. 使用命令行提取抓取到的数据
+4. 改写 spider 去递归追踪链接
+5. 使用 spider 参数
 
-Scrapy is written in Python_. If you're new to the language you might want to
-start by getting an idea of what the language is like, to get the most out of
-Scrapy.
+Scrapy 使用 Python_ 编写而成. 如果你对你想要的语言是陌生的。
+首先要了解语言是什么样的，这样才能最大限度地发挥 Scrapy 作用。
 
-If you're already familiar with other languages, and want to learn Python
-quickly, we recommend reading through `Dive Into Python 3`_.  Alternatively,
-you can follow the `Python Tutorial`_.
+如果你已经熟悉了其他语言，打算快速入门 Python 我们建议通过阅读 `Dive Into Python 3`_.  或者,
+你也可以参考 `Python Tutorial`_.
 
-If you're new to programming and want to start with Python, you may find useful
-the online book `Learn Python The Hard Way`_. You can also take a look at `this
+如果你是以 Python 新入门编程，你可能会找到很实用的在线书籍在 `Learn Python The Hard Way`_。 你也可以参考 `this
 list of Python resources for non-programmers`_.
 
 .. _Python: https://www.python.org/
@@ -37,45 +33,42 @@ list of Python resources for non-programmers`_.
 .. _Learn Python The Hard Way: https://learnpythonthehardway.org/book/
 
 
-Creating a project
+创建一个工程
 ==================
 
-Before you start scraping, you will have to set up a new Scrapy project. Enter a
-directory where you'd like to store your code and run::
+在抓去之前，必须创建一个 Scrapy 工程，在命令行输入代码要存储的目录并且运行::
 
     scrapy startproject tutorial
 
-This will create a ``tutorial`` directory with the following contents::
+这里会创建一个 ``tutorial`` 文件夹里面有一下内容::
 
     tutorial/
-        scrapy.cfg            # deploy configuration file
+        scrapy.cfg            # 部署配置文件
 
-        tutorial/             # project's Python module, you'll import your code from here
+        tutorial/             # 工程的 Python 模块， 代码从这里导入
             __init__.py
 
-            items.py          # project items definition file
+            items.py          # 工程 items 定义文件
             
-            middlewares.py    # project middlewares file
+            middlewares.py    # 工程 middlewares（中间件） 文件
 
-            pipelines.py      # project pipelines file
+            pipelines.py      # 工程 pipelines 文件
 
-            settings.py       # project settings file
+            settings.py       # 工程 settings 文件
 
-            spiders/          # a directory where you'll later put your spiders
+            spiders/          # 后期编写spider的目录
                 __init__.py
 
 
-Our first Spider
+第一个 Spider
 ================
 
-Spiders are classes that you define and that Scrapy uses to scrape information
-from a website (or a group of websites). They must subclass
-:class:`scrapy.Spider` and define the initial requests to make, optionally how
-to follow links in the pages, and how to parse the downloaded page content to
-extract data.
+Spiders 是定义的类 Scrapy 用从一个网址（或者一组网址）来抓取数据
+它们必须是:class:`scrapy.Spider` 的子类并且定义初始化请求，可选如何追踪本页连接，
+和解析下载页面的内容来提取数据。
 
-This is the code for our first Spider. Save it in a file named
-``quotes_spider.py`` under the ``tutorial/spiders`` directory in your project::
+这是我们的第一个 Spider. 保存文件并命名为
+``quotes_spider.py`` 在工程里的 ``tutorial/spiders`` 目录中::
 
     import scrapy
 
@@ -99,12 +92,11 @@ This is the code for our first Spider. Save it in a file named
             self.log('Saved file %s' % filename)
 
 
-As you can see, our Spider subclasses :class:`scrapy.Spider <scrapy.spiders.Spider>`
-and defines some attributes and methods:
+我们看到， Spider 继承自:class:`scrapy.Spider <scrapy.spiders.Spider>`并且定义了
+一些属性和方法:
 
-* :attr:`~scrapy.spiders.Spider.name`: identifies the Spider. It must be
-  unique within a project, that is, you can't set the same name for different
-  Spiders.
+* :attr:`~scrapy.spiders.Spider.name`: 定义 Spider. 在一个工程里面必须唯一，也就是说，
+不能在不同的 Spiders 中不要有同样的名字
 
 * :meth:`~scrapy.spiders.Spider.start_requests`: must return an iterable of
   Requests (you can return a list of requests or write a generator function)
